@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\Admin\ShippingOrderController;
+use App\Http\Controllers\Admin\ManageUsersController;
 
 /*
 |----------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::resource('admin', AdminAuthController::class)
 Route::middleware(['auth:admin'])->group(function () {
     // Resource route for shipping orders
     Route::resource('shipping-orders', ShippingOrderController::class);
+    // Resource for users to manage them
+    Route::resource('users', ManageUsersController::class);
+
     
 });
 

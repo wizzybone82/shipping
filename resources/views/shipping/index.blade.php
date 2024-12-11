@@ -1,8 +1,7 @@
 @extends('includes.layout')
 @section('content')
 
-<div class="container">
-    <h2 class="text-center mb-4">Shipping Order List</h2>
+<div class="container mt-3">
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -54,6 +53,9 @@
                     @endforelse
                 </tbody>
             </table>
+            <div class="">
+                    {{ $shippingOrders->links() }}
+            </div>
         </div>
     </div>
 

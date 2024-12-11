@@ -13,9 +13,11 @@ class ShippingOrderController extends Controller
     public function index()
     {
         $title = 'Orders';
-        $shippingOrders = ShippingOrder::orderByDesc('created_at')->get(); // Get all orders, sorted by most recent
-
-        return view('shipping.index', compact('shippingOrders','title'));
+    
+        // Use paginate instead of get and specify the number of items per page
+        $shippingOrders = ShippingOrder::orderByDesc('created_at')->paginate(10);
+    
+        return view('shipping.index', compact('shippingOrders', 'title'));
     }
 
 
@@ -38,7 +40,7 @@ class ShippingOrderController extends Controller
     public function edit($id){
         $title = 'Edit Order';
         $users = User::all();
-        $shippingOrder = ShippingOrder::findOrFail($id);
+        $shippingOrder = ShippingOrder::where('id',$id)->get()->first();
         return view('shipping.edit', compact('title','users','shippingOrder'));
     }
     public function store(Request $request)
@@ -88,14 +90,6 @@ class ShippingOrderController extends Controller
     public function sendStatusUpdateNotification($id,$status, Request $request)
     {
         $shippingOrder = ShippingOrder::findOrFail($id);
-
-       
-        $shippingOrder->update([
-            'status' => $status,
-            'updated_by' => 'admin', 
-        ]);
-
-        return redirect()->route('shipping-orders.index')->with('success', 'Shipping order status updated successfully');
     }
 
     public function destroy($id){

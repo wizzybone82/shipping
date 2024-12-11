@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer text-center">
+        <div class="card-footer">
             <button onclick="window.print()" class="btn btn-success">
                 Print Invoice
             </button>

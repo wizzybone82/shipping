@@ -1,8 +1,7 @@
 @extends('includes.layout')
 @section('content')
 
-<div class="container mb-2">
-    <h2 class="text-center">Edit Shipping Order</h2>
+<div class="container mt-3">
     @if($errors->any())
     <div class="alert alert-danger">
         <ul class="mb-0">
@@ -13,6 +12,9 @@
     </div>
     @endif
     <div class="card">
+        <div class="card-header">
+            Shipping Order Form
+        </div>
         <div class="card-body">
             <form action="{{ route('shipping-orders.store') }}" method="POST">
                 @csrf
