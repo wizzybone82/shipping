@@ -36,7 +36,7 @@
                             <a class="nav-link" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
                         </li>
 
-                        <form id="logout-form" action="{{ route('admin.auth.destroy', ['auth' =>  Auth::guard('admin')->id()])}}" method="POST" style="display: none;">
+                        <form id="logout-form" action="{{ route('admin.destroy', [Auth::guard('admin')->id()])}}" method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
                         </form>

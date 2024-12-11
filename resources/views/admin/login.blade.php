@@ -13,7 +13,7 @@
                     </ul>
                 </div>
             @endif
-            <form method="POST" action="{{ route('admin.auth.store') }}">
+            <form method="POST" action="{{ route('admin.store') }}">
                 @csrf <!-- Include CSRF token for Laravel security -->
 
                 <!-- Email Field -->

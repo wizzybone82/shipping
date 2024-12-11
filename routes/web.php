@@ -17,27 +17,25 @@ use App\Http\Controllers\Admin\ShippingOrderController;
 
 // Redirect to admin dashboard
 Route::get('/', function () {
-    return redirect()->route('admin.auth.index'); // Redirect to admin login page
+    return redirect()->route('admin.index'); // Redirect to admin login page
 });
 
 // Admin authentication routes
-Route::resource('admin/auth', AdminAuthController::class)
+Route::resource('admin', AdminAuthController::class)
     ->only(['index', 'create', 'store', 'destroy'])
     ->names([
-        'index' => 'admin.auth.index',
-        'create' => 'admin.auth.create',
-        'store' => 'admin.auth.store',
-        'destroy' => 'admin.auth.destroy',
+        'index' => 'admin.index',
+        'create' => 'admin.create',
+        'store' => 'admin.store',
+        'destroy' => 'admin.destroy',
     ]);
 
 // Admin shipping order routes
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
     // Resource route for shipping orders
     Route::resource('shipping-orders', ShippingOrderController::class)->except([
         'destroy' // We'll use a custom cancel route instead
     ]);
     
-    // Custom route to cancel an order
-    Route::patch('shipping-orders/{id}/cancel', [ShippingOrderController::class, 'cancel'])->name('shipping-orders.cancel');
 });
 

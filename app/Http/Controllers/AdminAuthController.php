@@ -14,13 +14,16 @@ class AdminAuthController extends Controller
             $title = 'Dashboard';
             return view('admin.dashboard',compact('title'));
         } else {
-            return redirect()->route('admin.auth.create')->withErrors('You must log in first.');
+            return redirect()->route('admin.create')->withErrors('You must log in first.');
         }
     }
 
     // Login form (dummy placeholder for now)
     public function create()
     {
+        if (Auth::guard('admin')->check()){
+            return redirect()->route('admin.index');
+        }
         $title = 'Login';
         return view('admin.login',compact('title'));
     }
@@ -32,7 +35,7 @@ class AdminAuthController extends Controller
 
         if (Auth::guard('admin')->attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->route('admin.auth.index'); // Redirect to the dashboard
+            return redirect()->route('admin.index'); // Redirect to the dashboard
         }
 
         return back()->withErrors('Invalid credentials');
@@ -45,7 +48,7 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.auth.create'); // Redirect to login form
+        return redirect()->route('admin.create'); // Redirect to login form
     }
 
     // Not implemented resource methods
