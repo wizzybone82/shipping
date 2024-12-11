@@ -8,14 +8,14 @@
                 <h2>Manage Users</h2>
                 <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Create User</a>
             </div>
-           
+
             <table class="table table-striped">
-                <thead  class="table-dark">
+                <thead class="table-dark">
                     <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Actions</th>
+                        <th class="text-nowrap">#</th>
+                        <th class="text-nowrap">Name</th>
+                        <th class="text-nowrap">Email</th>
+                        <th class="text-nowrap">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,20 +25,31 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>
-                            <!-- <a href="{{ route('users.show', $user) }}" class="btn btn-info btn-sm">View</a> -->
-                            <a href="{{ route('users.edit', $user) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="actionDropdown{{ $user->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="actionDropdown{{ $user->id }}">
+                                    <!-- Uncomment this line if you want the "View" button -->
+                                    <!-- <li><a href="{{ route('users.show', $user) }}" class="dropdown-item">View</a></li> -->
+                                    <li><a href="{{ route('users.edit', $user) }}" class="dropdown-item">Edit</a></li>
+                                    <li>
+                                        <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
                         </td>
+
                     </tr>
                     @endforeach
                 </tbody>
             </table>
             <div class="">
-                    {{ $users->links() }}
+                {{ $users->links() }}
             </div>
         </div>
     </div>

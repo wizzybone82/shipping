@@ -100,7 +100,7 @@
                         <label for="customer_id" class="form-label">Customer ID</label>
                         <select class="form-select" name="customer_id">
                             @foreach($users as $u)
-                            <option value="{{$u->id}}">{{$u->name}}</option>
+                            <option value="{{$u->id}}" {{ old('status', $shippingOrder->customer_id ?? '') == $u->id ? 'selected' : '' }}>{{$u->name}}</option>
                             @endforeach
 
                         </select>
@@ -112,8 +112,8 @@
                             <option value="">Select Status</option>
                             <option value="pending" {{ old('status', $shippingOrder->status ?? '') == 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="in progress" {{ old('status', $shippingOrder->status ?? '') == 'in progress' ? 'selected' : '' }}>In Progress</option>
-                            <option value="shipped" {{ old('status', $shippingOrder->status ?? '') == 'in progress' ? 'selected' : '' }}>Shipped</option>
-                            <option value="on route" {{ old('status', $shippingOrder->status ?? '') == 'in progress' ? 'selected' : '' }}>On Route</option>
+                            <option value="shipped" {{ old('status', $shippingOrder->status ?? '') == 'shipped' ? 'selected' : '' }}>Shipped</option>
+                            <option value="on route" {{ old('status', $shippingOrder->status ?? '') == 'on route' ? 'selected' : '' }}>On Route</option>
                             <option value="delivered" {{ old('status', $shippingOrder->status ?? '') == 'delivered' ? 'selected' : '' }}>Delivered</option>
                             <option value="cancelled" {{ old('status', $shippingOrder->status ?? '') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
                         </select>

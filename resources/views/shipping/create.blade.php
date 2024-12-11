@@ -44,7 +44,7 @@
 
                         <div class="col-md-3">
                             <label for="package_weight" class="form-label">Package Weight</label>
-                            <input type="number" id="package_weight" name="package_weight" class="form-control" value="{{ old('package_weight', $shippingOrder->package_weight ?? '') }}" required>
+                            <input type="number" id="package_weight" name="package_weight" class="form-control" value="{{ old('package_weight', $shippingOrder->package_weight ?? '') }}">
                         </div>
 
                         <div class="col-md-3">

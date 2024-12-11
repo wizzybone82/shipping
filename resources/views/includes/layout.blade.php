@@ -19,7 +19,10 @@
     <div id="page-content-wrapper" class="flex-grow-1 d-flex flex-column">
         <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
             <div class="container-fluid">
-                <button class="btn btn-primary" id="menu-toggle">Toggle Menu</button>
+                <!-- <button class="btn btn-primary">Toggle Menu</button> -->
+
+                <i  id="menu-toggle" class="fas fa-bars"></i>
+
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

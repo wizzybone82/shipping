@@ -50,7 +50,7 @@ class ShippingOrderController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'package_size' => 'nullable|in:small,large,extra_large,medium',
-            'package_weight' => 'required|numeric',
+            'package_weight' => 'nullable|numeric',
             'weight_metric' => 'nullable|in:gram,kg',
             'number_of_items' => 'nullable|integer',
             'delivery_time' => 'required|date',
@@ -73,11 +73,17 @@ class ShippingOrderController extends Controller
             if (!$shippingOrder) {
                 return redirect()->route('shipping-orders.index')->with('error', 'Internal server error');
             }
-
+            $check_status = $this->sendStatusUpdateNotification($request->order_id,$validated['status']);
             // Update the existing shipping order
             $shippingOrder->update($validated);
 
-            return redirect()->route('shipping-orders.index')->with('success', 'Shipping order updated successfully');
+            if($check_status){
+                return redirect()->route('shipping-orders.index')->with('success', 'Shipping order updated successfully and status is changed to '.$validated['status']);
+            }else{
+                return redirect()->route('shipping-orders.index')->with('success', 'Shipping order updated successfully');
+            }
+
+           
         }
 
         // Create a new shipping order if no id is passed
@@ -87,9 +93,15 @@ class ShippingOrderController extends Controller
     }
 
    
-    public function sendStatusUpdateNotification($id,$status, Request $request)
+    public function sendStatusUpdateNotification($id,$status)
     {
-        $shippingOrder = ShippingOrder::findOrFail($id);
+        $shippingOrder = ShippingOrder::where('id',$id)->first()->toArray();
+        
+        if($shippingOrder != $status){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public function destroy($id){
