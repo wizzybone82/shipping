@@ -7,9 +7,15 @@
     <title>{{$title}}</title>
 </head>
 <style>
+    html{
+        height:100%;
+    }
+    body{
+        height: 100%;
+    }
     #wrapper {
         display: flex;
-        height: 100vh;
+        height: 100%;
         overflow-x: hidden;
     }
 

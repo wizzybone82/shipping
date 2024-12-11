@@ -12,28 +12,36 @@ class ShippingOrderController extends Controller
 
     public function index()
     {
+        $title = 'Orders';
         $shippingOrders = ShippingOrder::orderByDesc('created_at')->get(); // Get all orders, sorted by most recent
 
-        return view('shipping-orders.index', compact('shippingOrders'));
+        return view('shipping.index', compact('shippingOrders','title'));
     }
 
 
     public function show($id)
     {
+        $title = 'Order Detail';
         $shippingOrder = ShippingOrder::findOrFail($id);
 
-        return view('shipping-orders.show', compact('shippingOrder'));
+        return view('shipping.show', compact('shippingOrder','title'));
     }
 
 
     public function create(){
-        echo "create order view";
+        // $shippingOrder = ShippingOrder::findOrFail($id);
+        $title = 'Create Order';
+        $users = User::all();
+        return view('shipping.create', compact('title','users'));
     }
 
-    public function edit(){
-        echo "edit order view";
+    public function edit($id){
+        $title = 'Edit Order';
+        $users = User::all();
+        $shippingOrder = ShippingOrder::findOrFail($id);
+        return view('shipping.edit', compact('title','users','shippingOrder'));
     }
-    public function store(Request $request, $id = null)
+    public function store(Request $request)
     {
         // Validate the incoming data
         $validated = $request->validate([
@@ -55,9 +63,9 @@ class ShippingOrderController extends Controller
             'mobile_key' => 'nullable|string',
         ]);
 
-        if ($id) {
+        if ($request->order_id != NULL) {
             // Find the existing shipping order
-            $shippingOrder = ShippingOrder::find($id);
+            $shippingOrder = ShippingOrder::find($request->order_id);
 
             // Check if the shipping order exists
             if (!$shippingOrder) {
@@ -88,6 +96,14 @@ class ShippingOrderController extends Controller
         ]);
 
         return redirect()->route('shipping-orders.index')->with('success', 'Shipping order status updated successfully');
+    }
+
+    public function destroy($id){
+        $shippingOrder = ShippingOrder::findOrFail($id);
+
+        $shippingOrder->delete();
+
+        return redirect()->route('shipping-orders.index')->with('success', 'Shipping order deleted successfully');
     }
 
 

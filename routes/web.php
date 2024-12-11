@@ -33,9 +33,7 @@ Route::resource('admin', AdminAuthController::class)
 // Admin shipping order routes
 Route::middleware(['auth:admin'])->group(function () {
     // Resource route for shipping orders
-    Route::resource('shipping-orders', ShippingOrderController::class)->except([
-        'destroy' // We'll use a custom cancel route instead
-    ]);
+    Route::resource('shipping-orders', ShippingOrderController::class);
     
 });
 
