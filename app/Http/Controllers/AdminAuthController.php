@@ -14,7 +14,7 @@ class AdminAuthController extends Controller
             $title = 'Dashboard';
             return view('admin.dashboard',compact('title'));
         } else {
-            return redirect()->route('admin.create')->withErrors('You must log in first.');
+            return redirect()->route('admin.create');
         }
     }
 
