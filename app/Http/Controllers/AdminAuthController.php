@@ -11,7 +11,8 @@ class AdminAuthController extends Controller
     {
         if (Auth::guard('admin')->check()) {
             
-            echo "This is admin dashboard";
+            $title = 'Dashboard';
+            return view('admin.dashboard',compact('title'));
         } else {
             return redirect()->route('admin.auth.create')->withErrors('You must log in first.');
         }
@@ -20,7 +21,8 @@ class AdminAuthController extends Controller
     // Login form (dummy placeholder for now)
     public function create()
     {
-        echo "This is the admin login form (replace with actual form view)";
+        $title = 'Login';
+        return view('admin.login',compact('title'));
     }
 
     // Login admin
