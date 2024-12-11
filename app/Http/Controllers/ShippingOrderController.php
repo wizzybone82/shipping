@@ -14,8 +14,8 @@ class ShippingOrderController extends Controller
      */
     public function create(Request $request)
     {
-        // Validate the incoming data
-        $validated = $request->validate([
+        // Define the validation rules
+        $rules = [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'package_size' => 'nullable|in:small,large,extra_large,medium',
@@ -30,16 +30,29 @@ class ShippingOrderController extends Controller
             'delivery_address' => 'required|string|max:255',
             'phone_number' => 'nullable|string',
             'mobile_key' => 'nullable|string',
-        ]);
-
-        // Create the shipping order
+        ];
+    
+        // Validate the data
+        $validator = Validator::make($request->all(), $rules);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+    
+        // If validation passes, create the shipping order
+        $validated = $validator->validated();
+    
         $shippingOrder = ShippingOrder::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'package_size' => $validated['package_size'] ?? null, // Ensure null if not provided
-            'package_weight' => $validated['package_weight']?? null,
-            'weight_metric' => $validated['weight_metric'] ?? null, // Ensure null if not provided
-            'number_of_items' => $validated['number_of_items'] ?? null, // Allow null if not provided
+            'package_size' => $validated['package_size'] ?? null,
+            'package_weight' => $validated['package_weight'] ?? null,
+            'weight_metric' => $validated['weight_metric'] ?? null,
+            'number_of_items' => $validated['number_of_items'] ?? null,
             'delivery_time' => $validated['delivery_time'],
             'pickup_time' => $validated['pickup_time'],
             'pickup_city' => $validated['pickup_city'],
@@ -48,10 +61,10 @@ class ShippingOrderController extends Controller
             'delivery_address' => $validated['delivery_address'],
             'phone_number' => $validated['phone_number'],
             'mobile_key' => $validated['mobile_key'],
-            'customer_id' => Auth::id(), // Use the logged-in user's ID
-            'status' => 'pending', // Default status
+            'customer_id' => Auth::id(),
+            'status' => 'pending',
         ]);
-
+    
         // Return the response with the created order
         return response()->json([
             'message' => 'Shipping order created successfully',
