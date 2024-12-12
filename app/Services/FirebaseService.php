@@ -11,7 +11,7 @@ class FirebaseService
     public function __construct()
     {
         $this->firebase = (new Factory)
-            ->withServiceAccount(public_path().env('FIREBASE_CREDENTIALS'));
+            ->withServiceAccount(public_path().'/json/file.json');
     }
 
     public function sendNotification($fcmToken, $title, $body, $data = [])
