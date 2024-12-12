@@ -144,7 +144,7 @@ class ShippingOrderController extends Controller
             ->count();
 
         $inProgressCount = ShippingOrder::where('customer_id', Auth::id())
-            ->where('status', 'inprogress')
+            ->where('status', 'in progress')
             ->count();
 
         $deliveredCount = ShippingOrder::where('customer_id', Auth::id())
@@ -155,11 +155,20 @@ class ShippingOrderController extends Controller
             ->where('status', 'cancelled')
             ->count();
 
+            $onroute = ShippingOrder::where('customer_id', Auth::id())
+            ->where('status', 'on route')
+            ->count();
+            $shipped = ShippingOrder::where('customer_id', Auth::id())
+            ->where('status', 'shipped')
+            ->count();
+
         return response()->json([
             'pending' => $pendingCount,
             'inprogress' => $inProgressCount,
             'delivered' => $deliveredCount,
             'cancelled' => $cancelledCount,
+            'on route' => $onroute,
+            'shipped' => $shipped,
         ]);
     }
 }
