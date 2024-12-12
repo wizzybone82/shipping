@@ -6,9 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\ShippingOrder;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Services\FirebaseService;
+
 
 class ShippingOrderController extends Controller
 {
+
+    protected $firebaseService;
+
+    public function __construct(FirebaseService $firebaseService)
+    {
+        $this->firebaseService = $firebaseService;
+    }
 
     public function index()
     {
@@ -97,7 +106,16 @@ class ShippingOrderController extends Controller
     {
         $shippingOrder = ShippingOrder::where('id',$id)->first()->toArray();
         
-        if($shippingOrder != $status){
+        if($shippingOrder['status'] != $status){
+            $user = User::where('id',$shippingOrder['customer_id'])->first()->toArray();
+            if(!empty($user['fcm_token'])){
+                $fcmToken = $user['fcm_token'];
+                $title = 'Hello '.$user['name'];
+                $body =  'Shipping order updated successfully and status is changed to '.$status;
+                $data = NULL;
+                $response = $this->firebaseService->sendNotification($fcmToken, $title, $body, $data);
+            }
+           
             return true;
         }else{
             return false;
