@@ -31,6 +31,7 @@ class UserAuthController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'fcm_token' => $request->fcm_token
         ]);
     
         // Generate token for the user
@@ -62,6 +63,11 @@ class UserAuthController extends Controller
 
         if ($user && Hash::check($validated['password'], $user->password)) {
             $token = $user->createToken('user_token')->plainTextToken;
+            $token = array(
+                'fcm_token' => $request->fcm_token
+            );
+
+            $user->update($token);
             return response()->json([
                 'message' => 'Login successful',
                 'user' => $user,
