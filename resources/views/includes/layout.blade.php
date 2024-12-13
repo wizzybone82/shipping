@@ -1,4 +1,5 @@
 @include('includes.header') <!-- Include the common header file -->
+<div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"></div>
 
 <div class="d-flex" id="wrapper">
     <!-- Sidebar -->

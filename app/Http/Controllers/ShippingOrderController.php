@@ -6,6 +6,8 @@ use App\Models\ShippingOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Events\OrderCreated;
+
 
 class ShippingOrderController extends Controller
 {
@@ -64,6 +66,8 @@ class ShippingOrderController extends Controller
             'customer_id' => Auth::id(),
             'status' => 'pending',
         ]);
+
+        event(new OrderCreated($shippingOrder));
     
         // Return the response with the created order
         return response()->json([
