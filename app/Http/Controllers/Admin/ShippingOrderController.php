@@ -7,6 +7,8 @@ use App\Models\ShippingOrder;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Services\FirebaseService;
+use Illuminate\Support\Facades\Mail;
+
 
 
 class ShippingOrderController extends Controller
@@ -102,22 +104,52 @@ class ShippingOrderController extends Controller
     }
 
    
-    public function sendStatusUpdateNotification($id,$status)
+    public function sendStatusUpdateNotification($id, $status)
     {
-        $shippingOrder = ShippingOrder::where('id',$id)->first()->toArray();
+        // Fetch the shipping order and user details
+        $shippingOrder = ShippingOrder::where('id', $id)->first();
         
-        if($shippingOrder['status'] != $status){
-            $user = User::where('id',$shippingOrder['customer_id'])->first()->toArray();
-            if(!empty($user['fcm_token'])){
-                $fcmToken = $user['fcm_token'];
-                $title = 'Hello '.$user['name'];
-                $body =  'Shipping order updated successfully and status is changed to '.$status;
-                $data = NULL;
-                $response = $this->firebaseService->sendNotification($fcmToken, $title, $body, $data);
+        if (!$shippingOrder) {
+            return response()->json(['error' => 'Shipping order not found'], 404);
+        }
+    
+        $shippingOrderArray = $shippingOrder->toArray();
+    
+        if ($shippingOrderArray['status'] != $status) {
+            $user = User::where('id', $shippingOrderArray['customer_id'])->first();
+            
+            if ($user) {
+                $userArray = $user->toArray();
+    
+                // Send push notification
+                if (!empty($userArray['fcm_token'])) {
+                    $fcmToken = $userArray['fcm_token'];
+                    $title = 'Hello ' . $userArray['name'];
+                    $body = 'Shipping order updated successfully and status is changed to ' . $status;
+                    $data = NULL;
+                    $this->firebaseService->sendNotification($fcmToken, $title, $body, $data);
+                }
+    
+                // Send email using SendGrid
+                $emailData = [
+                    'name' => $userArray['name'],
+                    'orderId' => $shippingOrderArray['id'],
+                    'status' => $status,
+                    'deliveryAddress' => $shippingOrderArray['delivery_address'],
+                    'deliveryCity' => $shippingOrderArray['delivery_city'],
+                ];
+    
+                Mail::send('emails.status-update', $emailData, function ($message) use ($userArray) {
+                    $message->to($userArray['email'], $userArray['name'])
+                            ->subject('Your Shipping Order Status Updated');
+                });
+    
+                // Update the order status in the database
+                $shippingOrder->update(['status' => $status]);
+    
+                return true;
             }
-           
-            return true;
-        }else{
+        } else {
             return false;
         }
     }
